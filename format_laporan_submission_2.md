@@ -124,7 +124,7 @@ Kekurangan:
 
 `movie_recommendations('Mad Max (1979)')`
 
-![image](https://github.com/user-attachments/assets/29998bce-aab0-47af-9a0c-0f26af20d24b)
+![image](https://github.com/user-attachments/assets/ae0a8ab0-3343-4a7f-8c95-f43135b6fa62)
 
 Gambar 6. Hasil rekomendasi film berdasarkan pendekatan Content-Based Filtering
 
@@ -142,7 +142,7 @@ Kekurangan:
 - Butuh data interaksi yang cukup banyak agar model bisa belajar dengan baik.
 - Rentan terhadap data sparsity (data interaksi yang sangat jarang), sehingga kualitas rekomendasi bisa menurun.
 
-![image](https://github.com/user-attachments/assets/4c678822-ebf9-4337-b7ef-bde69a1065b0)
+![image](https://github.com/user-attachments/assets/aa80c903-d75f-4abb-8685-74f84f627a7a)
 
 Gambar 7. Hasil rekomendasi film berdasarkan pendekatan Collaborative Filtering
 
