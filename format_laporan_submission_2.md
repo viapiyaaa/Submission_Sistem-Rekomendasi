@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Sistem rekomendasi merupakan salah satu aplikasi populer dalam machine learning, khususnya di bidang e-commerce, hiburan, dan media digital. Dalam proyek ini dikembangkan sistem rekomendasi film yang didasarkan pada interaksi pengguna terhadap berbagai judul film. Banyaknya pilihan film seringkali membuat pengguna kesulitan menemukan tontonan yang sesuai, sehingga dapat mengakibatkan pemborosan waktu dan ketidakpuasan (Fajriansyah, Adikara, & Widodo, 2021). Untuk mengatasi masalah tersebut, proyek ini membangun dua sistem rekomendasi terpisah: Content-Based Filtering yang memanfaatkan kemiripan genre film melalui TF-IDF dan cosine similarity, serta Collaborative Filtering berbasis neural network dengan embedding. Kedua pendekatan ini digunakan untuk menunjukkan cara berbeda dalam memberikan rekomendasi yang personal, serta membandingkan efektivitasnya dalam mengatasi masalah seperti cold-start dan data sparsity.
+Sistem rekomendasi merupakan salah satu aplikasi populer dalam machine learning, khususnya di bidang e-commerce, hiburan, dan media digital. Dalam proyek ini dikembangkan sistem rekomendasi film yang didasarkan pada interaksi pengguna terhadap berbagai judul film. Banyaknya pilihan film seringkali membuat pengguna kesulitan menemukan tontonan yang sesuai, sehingga dapat mengakibatkan pemborosan waktu dan ketidakpuasan (Fajriansyah, Adikara, & Widodo, 2021). Untuk mengatasi masalah tersebut, proyek ini membangun dua sistem rekomendasi terpisah: Content-Based Filtering yang memanfaatkan kemiripan genre film melalui TF-IDF yang memberikan bobot pada fitur-fitur dan cosine similarity digunakan untuk mengukur kesamaan antara film yang dipilih pengguna dengan film lainnya berdasarkan dataset (Sari, Isnaini, & Seniwati, 2025), serta Collaborative Filtering berbasis neural network menggunakan teknik embedding untuk merepresentasikan pengguna dan item dalam bentuk vektor. Pengguna dengan tingkat kesamaan tertinggi berdasarkan representasi embedding tersebut dikelompokkan, lalu direkomendasikan item yang disukai oleh pengguna lain dalam kelompok tersebut berdasarkan data rating yang mereka berikan (Nugroho, Lubis, & Perdana, 2024).  
 
 ## Business Understanding
 
@@ -88,7 +88,7 @@ Pada tahap ini juga ditentukan fitur-fitur akhir yang akan digunakan dalam pembu
 
 Pada tahap data preparation dilakukan penghapusan data duplikat dan nilai kosong (null), proses encoding terhadap userId dan movieId, pembuatan matriks TF-IDF dari kolom genres, serta pembagian data menjadi data pelatihan dan validasi. Setelah itu, dilakukan perhitungan cosine similarity berdasarkan matriks TF-IDF untuk mengukur tingkat kemiripan antar film berdasarkan genre-nya.
 
-Tidak terdapat nilai null pada fitur-fitur yang digunakna, tetpi terdapat data duplikat sebanyak 1841 yang berarti ada sejumlah interaksi pengguna dan film yang tercatat lebih dari satu kali dengan informasi yang sama persis (userId, movieId, title, genres, dan rating). 
+Tidak terdapat nilai null pada fitur-fitur yang digunakna, tetpi terdapat data duplikat sebanyak 1841 yang berarti ada sejumlah interaksi pengguna dan film yang tercatat lebih dari satu kali dengan informasi yang sama persis (userId, movieId, title, genres, dan rating). Jumlah data setelah penghapusan duplikat adalah 100.836. 
 
 Langkah persiapan data untuk sistem rekomendasi Content-Based Filtering meliputi pembuatan matriks TF-IDF dari kolom genres pada dataset film. Matriks ini merepresentasikan setiap film dalam bentuk vektor berdasarkan genre-nya. Selanjutnya, dilakukan perhitungan cosine similarity antar film berdasarkan vektor TF-IDF tersebut untuk mengukur tingkat kemiripan konten antar film. Nilai similarity ini kemudian digunakan untuk merekomendasikan film yang memiliki genre serupa dengan film yang pernah disukai atau ditonton oleh pengguna.
 
@@ -165,6 +165,8 @@ Grafik diatas menunjukkan bagaimana RMSE berubah seiring bertambahnya epoch dala
 
 ## **Referensi**
 Fajriansyah, M., Adikara, P. P., & Widodo, A. W. (2021). Sistem Rekomendasi Film Menggunakan Content Based Filtering. Jurnal Pengembangan Teknologi Informasi dan Ilmu Komputer, 5(6), 2188-2199.
+Sari, R. A., Isnaini, S. F., & Seniwati, E. (2025). Sistem Rekomendasi Film Menggunakan Content Based Filtering. The Indonesian Journal of Computer Science Research, 4(1), 19-27.
+Nugroho, D. A., Lubis, C., & Perdana, N. J. (2024). Sistem Rekomendasi Film Menggunakan Metode Neural Collaborative Filtering Movie Recommendation System Using Neural Collaborative Filtering. J. Inf. Technol. Comput. Sci, 7(3), 6765-6775.
 
 _Catatan:_
 - _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
