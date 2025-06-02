@@ -117,7 +117,11 @@ Gambar 4. Gambar hasil representasi vektor fitur genre film dengan TF-IDF
 
 Gambar 5. Hasil Similarity matrix pada setiap film
 
-Proses encoding terhadap userId dan movieId dilakukan untuk mengubahnya menjadi ID numerik berurutan, sehingga data tersebut dapat digunakan dalam layer embedding pada model sistem rekomendasi dengan pendekatan **Collaborative Filtering**. Selain itu, dilakukan konversi tipe data kolom rating menjadi float untuk memudahkan proses normalisasi nilai rating. Selanjutnya, data diacak menggunakan .sample(frac=1), kemudian dilakukan normalisasi nilai rating sebelum pembagian data menjadi data latih dan data validasi dengan perbandingan 80:20. Pembagian ini bertujuan untuk keperluan pelatihan model.
+Proses encoding terhadap userId dan movieId dilakukan untuk mengubahnya menjadi ID numerik berurutan, sehingga data tersebut dapat digunakan dalam layer embedding pada model sistem rekomendasi dengan pendekatan **Collaborative Filtering**. Selain itu, dilakukan konversi tipe data kolom rating menjadi float untuk memudahkan proses normalisasi nilai rating. Selanjutnya, data diacak menggunakan .sample(frac=1), kemudian dilakukan normalisasi nilai rating sebelum pembagian data menjadi data latih dan data validasi dengan perbandingan 80:20. Pembagian ini bertujuan untuk keperluan pelatihan model. Berkut hasil pengacakan menggunakan .sample(frac=1).
+
+![Hasil pengacakan menggunakan .sample(frac=1)](https://github.com/user-attachments/assets/8b8e7a6c-6275-4b1c-97db-7dcd58164fbc)
+
+Gambar 6. Hasil pengacakan menggunakan .sample(frac=1)
 
 ## Modeling
 
@@ -143,7 +147,7 @@ Kekurangan:
 
 ![Hasil rekomendasi film berdasarkan pendekatan Content-Based Filtering](https://github.com/user-attachments/assets/59d354e3-dbc6-46a1-b26a-5896732b1306)
 
-Gambar 6. Hasil rekomendasi film berdasarkan pendekatan Content-Based Filtering
+Gambar 7. Hasil rekomendasi film berdasarkan pendekatan Content-Based Filtering
 
 **Collaborative Filtering:**
 
@@ -161,7 +165,7 @@ Kekurangan:
 
 ![Hasil rekomendasi film berdasarkan pendekatan Collaborative Filtering](https://github.com/user-attachments/assets/e207a500-eea0-42c3-a91c-9f954612e9d7)
 
-Gambar 7. Hasil rekomendasi film berdasarkan pendekatan Collaborative Filtering
+Gambar 8. Hasil rekomendasi film berdasarkan pendekatan Collaborative Filtering
 
 ## Evaluation
 
@@ -176,7 +180,7 @@ Meskipun terdapat sedikit perbedaan antara error pada data pelatihan dan data va
 
 ![Grafik Hasil Pelatihan](https://github.com/user-attachments/assets/3d51686b-0d6e-4724-89e6-07ce57229db4)
 
-Gambar 8. Grafik Hasil Pelatihan 
+Gambar 9. Grafik Hasil Pelatihan 
 
 Grafik diatas menunjukkan bagaimana RMSE berubah seiring bertambahnya epoch dalam pelatihan model. Garis merah merepresentasikan RMSE training, yang menurun secara konsisten, menandakan bahwa model semakin memahami pola dalam data latihannya. Sementara itu, garis biru menunjukkan RMSE validasi, yang juga menurun tetapi dengan laju lebih lambat. Hal ini berarti model mulai bekerja lebih baik dengan data yang belum pernah dilihat sebelumnya. Secara keseluruhan, grafik ini menunjukkan progres yang baik, tetapi penting untuk terus memantau agar keseimbangan antara training dan validasi tetap optimal.
 
