@@ -33,14 +33,14 @@ Adapun tujuan dari proyek ini adalah sebagai berikut.
 
 ## Data Understanding
 
-Dataset yang digunakan berisi data film, rating, tag, dan link yang diunduh dari Kaggle [Movie Lens Dataset](https://www.kaggle.com/datasets/aigamer/movie-lens-dataset). Dataset ini terdiri dari: 
+Dataset yang digunakan berisi data film, rating, tag, dan link yang diunduh dari Kaggle [Movie Lens Dataset](https://www.kaggle.com/datasets/aigamer/movie-lens-dataset). Dataset ini terdiri dari empat file utama, sebagai berikut. 
 
 - movies.csv: merupakan informasi metadata film seperti movieId, title, dan genres.
 - ratings.csv: merupakan data interaksi pengguna dan film berupa userId, movieId, rating, dan timestamp.
 - tag.csv: merupakan tag atau label yang diberikan pengguna pada film. userId, movieId, tag, dan timestamp.
 - link.csv: merupakan mapping movieId ke IMDb dan TMDb untuk integrasi data eksternal. movieId, imdbId, dan tmdbId.
   
-Adapun beberapa fitur yang digunakan dalam pembuatan sistem rekomendasi ini adalah sebagai berikut:
+Adapun fitur-fitur yang digunakan dalam pembangunan sistem rekomendasi adalah sebagai berikut:
 
 - movieId: ID unik setiap film.
 - title: Judul film.
@@ -48,7 +48,7 @@ Adapun beberapa fitur yang digunakan dalam pembuatan sistem rekomendasi ini adal
 - userId: ID unik pengguna.
 - rating: Penilaian yang diberikan pengguna terhadap film (skala 0.5 - 5.0).
 
-Pada tahap ini dilakukan eksplorasi data untuk memahami isi dan karakteristik dataset. Pertama, informasi dari setiap file .csv diperiksa menggunakan fungsi seperti .info(), .describe(), dan .shape() Selanjutnya, data digabungkan dan diperiksa apakah ada data duplikat atau nilai yang kosong menggunakan fungsi isnull() untuk setiap datasetnya. 
+Pada tahap Data Understanding, dilakukan eksplorasi untuk memahami isi dan karakteristik data. Pemeriksaan awal dilakukan terhadap masing-masing file .csv menggunakan fungsi seperti .info(), .describe(), dan .shape(). Selain itu, dilakukan pengecekan terhadap keberadaan data duplikat dan nilai kosong (missing value) menggunakan fungsi isnull(). 
 
 Jumlah data pada masing-masing dataset sebelum digabungkan adalah sebagai berikut:
 
@@ -57,45 +57,27 @@ Jumlah data pada masing-masing dataset sebelum digabungkan adalah sebagai beriku
 - Dataset ratings memiliki 100.836 baris dan 4 kolom,
 - Dataset tags memiliki 3.683 baris dan 4 kolom.
 
-Semua dataset tidak mengandung data duplikat atau missing value, kecuali dataset links yang memiliki 8 missing value. Namun, karena dataset links tidak akan digunakan dalam pembangunan sistem rekomendasi, missing value tersebut tidak ditangani. Sistem rekomendasi film ini hanya menggunakan dataset movies dan ratings sebagai sumber data utama.
+Hasil pengecekan menunjukkan bahwa seluruh dataset tidak mengandung data duplikat maupun missing value, kecuali links.csv yang memiliki 8 missing value. Namun, karena dataset links.csv tidak digunakan dalam pembangunan sistem rekomendasi, missing value pada dataset ini tidak ditangani lebih lanjut. Sistem rekomendasi hanya memanfaatkan dataset movies.csv dan ratings.csv sebagai sumber data utama.
 
 Pada tahap ini juga dilakukan eksplorasi awal dataset, ditemukan sebanyak 9742 movieId dan 9737 judul film yang unik, menunjukkan kemungkinan adanya judul yang sama untuk film berbeda. Terdapat 951 kombinasi genre, mencerminkan keragaman dan kompleksitas kategori film, termasuk yang tidak memiliki genre. Sistem penilaian mencakup 10 nilai rating unik dari 0.5 hingga 5.0. Selain itu, terdapat 1589 tag unik yang mencerminkan opini pengguna terhadap film. Temuan ini memberikan gambaran awal mengenai struktur dan karakteristik data untuk analisis lebih lanjut.
 
-Setelah dilakukan proses **penggabungan antara dataset movies dan ratings**, diperoleh total sebanyak 100.836 data dengan 6 kolom. Hasil pengecekan menunjukkan bahwa tidak terdapat missing value maupun data duplikat dalam dataset tersebut. Selanjutnya, pada **data final** yang hanya memuat fitur-fitur yang digunakan untuk pelatihan model, jumlah data tetap sebanyak 100.836, namun hanya terdiri dari 5 kolom. Tidak ditemukan missing value maupun data duplikat pada data final ini.
-
-## Data Preparation
-
-Pada tahap ini dilakukan penggabungan dataset yang akan digunakan dalam sistem rekomendasi, pengecekan missing value dan data duplikat pada hasil penggabungan, serta peninjauan persebaran data untuk memahami karakteristik dari data yang telah digabung. Selain itu, fitur-fitur akhir yang akan digunakan dipilih dan diperiksa kembali untuk memastikan tidak terdapat missing value maupun data duplikat. 
-
-Terdapat tahap data preparation tambahan untuk masing-masing pendekatan. Pada pendekatan Content-Based Filtering, dilakukan pembersihan data pada kolom genre film, kemudian dibuat matriks TF-IDF dari kolom genres. Setelah itu, dilakukan perhitungan cosine similarity berdasarkan matriks TF-IDF untuk mengukur tingkat kemiripan antar film berdasarkan genre-nya.
-
-Sementara itu, pada pendekatan Collaborative Filtering, dilakukan encoding terhadap userId dan movieId, serta konversi tipe data kolom rating menjadi float32. Selanjutnya, dilakukan proses pengacakan data menggunakan .sample(frac=1), kemudian normalisasi nilai rating sebelum pembagian data menjadi data latih dan data validasi dengan perbandingan 80:20.
-
-**Penggabungan dilakukan terhadap dua dataset utama**, yaitu movies dan ratings, yang akan digunakan dalam pembangunan sistem rekomendasi. Hasil penggabungan tersebut membentuk dataset kerja utama yang dinamakan **movies_ratings**. Dataset movies_ratings terdiri dari 100.836 baris data. Berikut adalah hasil dari proses penggabungan kedua dataset tersebut.
-
-![image](https://github.com/user-attachments/assets/bd172f04-3bb4-4889-9c7f-faf6bed04e9d)
-
-Gambar 1. Dataset setelah digabungkan (movie & ratings)
-
-Selanjutnya dilakukan pengecekan terhadap nilai yang hilang (missing value) dan data duplikat pada dataset hasil penggabungan. Berdasarkan hasil pengecekan, tidak ditemukan adanya missing value maupun data duplikat, sehingga tidak diperlukan proses pembersihan data lebih lanjut.
-
-Kemudian, dilakukan peninjauan persebaran data pada data rating, seperti menghitung jumlah rating yang diberikan oleh setiap pengguna dan setiap film, serta rata-rata rating. Distribusi skor rating juga divisualisasikan untuk memudahkan pemahaman. Selain itu, ditampilkan 20 film dengan jumlah rating terbanyak dan 20 pengguna yang paling aktif memberikan rating, lengkap dengan visualisasinya. Adapun hasil dari eksplorasi tersebut adalah sebagai berikut.
+Kemudian, dilakukan eksplorasi lanjutan pada data rating, seperti menghitung jumlah rating yang diberikan oleh setiap pengguna dan setiap film, serta rata-rata rating. Distribusi skor rating juga divisualisasikan untuk memudahkan pemahaman. Selain itu, ditampilkan 20 film dengan jumlah rating terbanyak dan 20 pengguna yang paling aktif memberikan rating, lengkap dengan visualisasinya. Adapun hasil dari eksplorasi tersebut adalah sebagai berikut.
 
 ![image](https://github.com/user-attachments/assets/7fa66560-abbd-46c8-b37c-27e89984d647)
 
-Gambar 2a. Sebaran skor rating
+Gambar 1a. Sebaran skor rating
 
 Secara keseluruhan, gambar grafik diatas menggambarkan bahwa penonton cenderung memberikan rating yang positif atau cukup positif terhadap film. Mayoritas film mendapatkan rating 3, 4, atau 5 bintang, dengan 4 bintang menjadi rating yang paling sering diberikan. Ini bisa berarti bahwa rata-rata film yang tersedia memiliki kualitas yang dianggap "baik" oleh sebagian besar penonton, atau bahwa penonton cenderung memberikan rating yang lebih tinggi.
 
 ![image](https://github.com/user-attachments/assets/d8d8fd26-ecd5-4882-b5ea-08fb65848a11)
 
-Gambar 2b. 20 Film dengan rating terbanyak
+Gambar 1b. 20 Film dengan rating terbanyak
 
 Secara keseluruhan, grafik ini menggambarkan film-film yang paling sering diulas atau diberi rating oleh pengguna, menyoroti popularitas dan daya tarik abadi dari sejumlah film klasik, terutama dari era 1990-an. Data ini menunjukkan bahwa film-film klasik dari era tersebut sangat populer di kalangan pemberi rating, dan penonton secara umum cenderung memberikan ulasan yang positif atau sangat baik terhadap film-film yang mereka tonton. Dalam dataset ini, film-film populer yang paling banyak mendapatkan rating, seperti "Forrest Gump," "Shawshank Redemption," dan "Pulp Fiction," didominasi oleh rilis tahun 1990-an, terutama dari tahun 1994, yang menunjukkan daya tarik abadi dari karya-karya klasik tersebut. Meskipun mencakup berbagai genre, daftar film dengan rating terbanyak ini secara tidak langsung merefleksikan popularitas tinggi di kalangan penonton aktif yang memberikan rating, dengan rentang jumlah rating antara 200 hingga lebih dari 300.
 
 ![image](https://github.com/user-attachments/assets/2e9153d1-242f-462b-a620-d98a45ef5bb8)
 
-Gambar 2c. 20 Pengguna aktif berdasarkan rating terbanyak
+Gambar 1c. 20 Pengguna aktif berdasarkan rating terbanyak
 
 Secara keseluruhan, grafik ini mengungkapkan bahwa platform rating film ini memiliki sejumlah kecil pengguna yang sangat aktif dan berdedikasi yang berkontribusi secara signifikan terhadap volume data rating. Kondisi ini berimplikasi pada potensi bias dalam statistik keseluruhan, karena preferensi atau karakteristik rating dari kelompok inti pengguna ini dapat secara signifikan memengaruhi tren yang diamati. Oleh karena itu, saat menganalisis data dari platform ini, sangat krusial untuk memahami bahwa meskipun volume rating tinggi, distribusinya tidak merata dan sangat bergantung pada kontribusi berharga dari segelintir pengguna inti tersebut.
 
@@ -103,25 +85,45 @@ Peninjauan persebaran data juga dilakukan pada genre film dengan melihat 20 genr
 
 ![image](https://github.com/user-attachments/assets/eb962aea-137d-444b-b044-663e72254cd0)
 
-Gambar 3. Sebaran 20 Genre film terbanyak 
+Gambar 2. Sebaran 20 Genre film terbanyak 
 
 Secara keseluruhan, grafik ini dengan jelas menunjukkan bahwa genre Drama dan Comedy adalah pilar utama dalam kumpulan data film ini, diikuti oleh genre populer lainnya seperti Thriller dan Action, sementara banyak genre lain memiliki representasi yang jauh lebih kecil. Dalam dataset film ini, genre Drama dan Comedy mendominasi dengan jumlah film masing-masing melebihi dan mendekati 4000, menunjukkan produktivitas atau popularitas yang signifikan. Genre seperti Thriller dan Action juga memiliki representasi kuat dengan sekitar 1800-2000 film. Namun, terdapat rentang popularitas yang luas, di mana genre minoritas seperti Film-Noir, IMAX, Western, dan Musical memiliki jumlah film yang jauh lebih sedikit, hanya beberapa ratus atau kurang. Perbedaan ini menyoroti fokus industri pada genre tertentu, yang penting untuk dipertimbangkan dalam sistem rekomendasi guna memastikan variasi dan relevansi genre minoritas bagi pengguna.
 
-Pada tahap ini, dilakukan **pemilihan fitur** yang akan digunakan dalam pembangunan sistem rekomendasi, yang disimpan dalam variabel bernama final, yaitu movieId, title, genres, userId, dan rating. Sebagai langkah validasi akhir terhadap kualitas data, dilakukan pengecekan kembali terhadap missing value dan duplikasi pada dataset gabungan. Hasil pengecekan menunjukkan konsistensi data, di mana tidak ditemukan nilai yang hilang maupun data duplikat. Dengan demikian, dataset dinyatakan layak dan siap digunakan untuk tahap pengembangan model rekomendasi. Dataset final ini terdiri dari 100.836 baris dan 5 kolom.
+Setelah dilakukan proses **penggabungan antara dataset movies dan ratings**, diperoleh total sebanyak 100.836 data dengan 6 kolom. Hasil pengecekan menunjukkan bahwa tidak terdapat missing value maupun data duplikat dalam dataset tersebut. Selanjutnya, pada **data final** yang hanya memuat fitur-fitur yang digunakan untuk pelatihan model, jumlah data tetap sebanyak 100.836, namun hanya terdiri dari 5 kolom. Tidak ditemukan missing value maupun data duplikat pada data final ini.
+
+## Data Preparation
+
+Pada tahap sebelumnya, telah dilakukan pengecekan terhadap missing value dan data duplikat pada masing-masing dataset. Hasil pengecekan menunjukkan bahwa tidak terdapat data duplikat pada semua dataset. Namun, ditemukan missing value pada dataset links. Karena dataset links tidak digunakan dalam pembangunan sistem rekomendasi, maka tidak dilakukan pembersihan lebih lanjut terhadap dataset tersebut.
+
+Adapun pada tahap ini, dilakukan penggabungan dataset yang akan digunakan dalam sistem rekomendasi, disertai dengan pengecekan missing value dan data duplikat pada hasil penggabungan. Kemudian, dilakukan pemilihan fitur-fitur akhir yang akan digunakan dalam pelatihan model, serta pemeriksaan ulang untuk memastikan bahwa tidak terdapat missing value maupun data duplikat pada data akhir tersebut.
+
+Terdapat tahap data preparation tambahan untuk masing-masing pendekatan. Pada pendekatan Content-Based Filtering, dilakukan pembersihan data pada kolom genre film, kemudian dibuat matriks TF-IDF dari kolom genres. Setelah itu, dilakukan perhitungan cosine similarity berdasarkan matriks TF-IDF untuk mengukur tingkat kemiripan antar film berdasarkan genre-nya.
+
+Sementara itu, pada pendekatan Collaborative Filtering, dilakukan encoding terhadap userId dan movieId, serta konversi tipe data kolom rating menjadi float32. Selanjutnya, dilakukan proses pengacakan data menggunakan .sample(frac=1), kemudian normalisasi nilai rating sebelum pembagian data menjadi data latih dan data validasi dengan perbandingan 80:20.
+
+**Penggabungan dilakukan terhadap dua dataset utama**, yaitu movies dan ratings, yang akan digunakan dalam pembangunan sistem rekomendasi. Hasil penggabungan tersebut membentuk dataset kerja utama yang dinamakan **movies_ratings**. Dataset movies_ratings terdiri dari 100.836 baris data. Berikut adalah hasil dari proses penggabungan kedua dataset tersebut.
+
+![Dataset setelah digabungkan (movie & ratings)](https://github.com/user-attachments/assets/016dc82a-afe7-49d0-b9a3-3903ef40a43f)
+
+Gambar 3. Dataset setelah digabungkan (movie & ratings)
+
+Selanjutnya dilakukan pengecekan terhadap nilai yang hilang (missing value) dan data duplikat pada dataset hasil penggabungan. Berdasarkan hasil pengecekan, tidak ditemukan adanya missing value maupun data duplikat, sehingga tidak diperlukan proses pembersihan data lebih lanjut.
+
+Pada tahap ini juga dilakukan **pemilihan fitur** yang akan digunakan dalam pembangunan sistem rekomendasi, yang disimpan dalam variabel bernama final, yaitu movieId, title, genres, userId, dan rating. Sebagai langkah validasi akhir terhadap kualitas data, dilakukan pengecekan kembali terhadap missing value dan duplikasi pada dataset gabungan. Hasil pengecekan menunjukkan konsistensi data, di mana tidak ditemukan nilai yang hilang maupun data duplikat. Dengan demikian, dataset dinyatakan layak dan siap digunakan untuk tahap pengembangan model rekomendasi. Dataset final ini terdiri dari 100.836 baris dan 5 kolom.
 
 Adapun langkah persiapan data untuk **sistem rekomendasi Content-Based Filtering** meliputi pembersihan data pada kolom genre film, yaitu mengganti nilai **(no genres listed)** menjadi string kosong dan Mengubah pemisah genre dari karakter | menjadi spasi sehingga formatnya lebih konsisten dan memudahkan pemrosesan data selanjutnya. Selanjutnya pembuatan matriks TF-IDF dari kolom genres pada dataset film. Matriks ini merepresentasikan setiap film dalam bentuk vektor berdasarkan genre-nya. Selanjutnya, dilakukan perhitungan cosine similarity antar film berdasarkan vektor TF-IDF tersebut untuk mengukur tingkat kemiripan konten antar film. Nilai similarity ini kemudian digunakan untuk merekomendasikan film yang memiliki genre serupa dengan film yang pernah disukai atau ditonton oleh pengguna.
 
-![Gambar hasil representasi vektor fitur genre film dengan TF-IDF](https://github.com/user-attachments/assets/4ad07667-3b70-41f9-b49c-2c2c9a744136)
+![Gambar hasil representasi vektor fitur genre film dengan TF-IDF](https://github.com/user-attachments/assets/6f20bf83-2e2e-4085-a118-862827f7b508)
 
 Gambar 4. Gambar hasil representasi vektor fitur genre film dengan TF-IDF
 
-![Hasil Similarity matrix pada setiap film](https://github.com/user-attachments/assets/e350ded5-b9f3-4167-aca6-756de4f2e779)
+![Hasil Similarity matrix pada setiap film](https://github.com/user-attachments/assets/11eb623f-e326-4094-a8f4-bdf6900d2a5d)
 
 Gambar 5. Hasil Similarity matrix pada setiap film
 
 Proses encoding terhadap userId dan movieId dilakukan untuk mengubahnya menjadi ID numerik berurutan, sehingga data tersebut dapat digunakan dalam layer embedding pada model sistem rekomendasi dengan pendekatan **Collaborative Filtering**. Selain itu, dilakukan **konversi tipe data kolom rating** menjadi float untuk memudahkan proses normalisasi nilai rating. Selanjutnya, **data diacak menggunakan .sample(frac=1)**, kemudian dilakukan **normalisasi nilai rating** sebelum pembagian data menjadi data latih dan data validasi dengan **perbandingan 80:20**. Pembagian ini bertujuan untuk keperluan pelatihan model. Berkut hasil pengacakan menggunakan .sample(frac=1).
 
-![Hasil pengacakan menggunakan .sample(frac=1)](https://github.com/user-attachments/assets/8b8e7a6c-6275-4b1c-97db-7dcd58164fbc)
+![Hasil pengacakan menggunakan .sample(frac=1)](https://github.com/user-attachments/assets/82ebb03e-0ca0-4396-9623-c24decc6054d)
 
 Gambar 6. Hasil pengacakan menggunakan .sample(frac=1)
 
@@ -147,7 +149,7 @@ Kekurangan:
 
 `movie_recommendations('Mad Max (1979)')`
 
-![Hasil rekomendasi film berdasarkan pendekatan Content-Based Filtering](https://github.com/user-attachments/assets/59d354e3-dbc6-46a1-b26a-5896732b1306)
+![Hasil rekomendasi film berdasarkan pendekatan Content-Based Filtering](https://github.com/user-attachments/assets/2acfd156-d088-4b87-ab8e-aff4139b0669)
 
 Gambar 7. Hasil rekomendasi film berdasarkan pendekatan Content-Based Filtering
 
@@ -165,7 +167,7 @@ Kekurangan:
 - Butuh data interaksi yang cukup banyak agar model bisa belajar dengan baik.
 - Rentan terhadap data sparsity (data interaksi yang sangat jarang), sehingga kualitas rekomendasi bisa menurun.
 
-![Hasil rekomendasi film berdasarkan pendekatan Collaborative Filtering](https://github.com/user-attachments/assets/e207a500-eea0-42c3-a91c-9f954612e9d7)
+![Hasil rekomendasi film berdasarkan pendekatan Collaborative Filtering](https://github.com/user-attachments/assets/8fa4d244-316f-4e14-8696-32d2b6609e7c)
 
 Gambar 8. Hasil rekomendasi film berdasarkan pendekatan Collaborative Filtering
 
@@ -175,12 +177,12 @@ Model Collaborative Filtering dievaluasi menggunakan metrik Root Mean Squared Er
 
 Hasil pelatihan menunjukkan bahwa model mencapai performa yang cukup baik:
 
-- RMSE Training (akhir epoch): 0.1360
-- RMSE Validation (akhir epoch): 0.1923
+- RMSE Training (akhir epoch): 0.1359
+- RMSE Validation (akhir epoch): 0.1925
 
 Meskipun terdapat sedikit perbedaan antara error pada data pelatihan dan data validasi, selisih tersebut masih dalam batas wajar dan tidak menunjukkan overfitting yang signifikan. Hal ini mengindikasikan bahwa model memiliki kemampuan generalisasi yang cukup baik terhadap data baru. Namun, untuk meningkatkan performa lebih lanjut dan mencegah potensi overfitting pada pelatihan jangka panjang, teknik tambahan seperti Dropout, regularisasi (L2), atau early stopping dapat diterapkan. Selain itu, peningkatan kualitas data dan penyempurnaan dimensi embedding juga dapat menjadi strategi pengembangan model selanjutnya.
 
-![Grafik Hasil Pelatihan](https://github.com/user-attachments/assets/3d51686b-0d6e-4724-89e6-07ce57229db4)
+![Grafik Hasil Pelatihan](https://github.com/user-attachments/assets/93a59977-7e9d-4002-aea4-3166a9a960c5)
 
 Gambar 9. Grafik Hasil Pelatihan 
 
