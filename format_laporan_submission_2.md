@@ -101,7 +101,7 @@ Sementara itu, pada pendekatan Collaborative Filtering, dilakukan encoding terha
 
 **Penggabungan dilakukan terhadap dua dataset utama**, yaitu movies dan ratings, yang akan digunakan dalam pembangunan sistem rekomendasi. Hasil penggabungan tersebut membentuk dataset kerja utama yang dinamakan **movies_ratings**. Dataset movies_ratings terdiri dari 100.836 baris data. Berikut adalah hasil dari proses penggabungan kedua dataset tersebut.
 
-![DataFrame setelah digabungkan (movie & ratings)](https://github.com/user-attachments/assets/73d7cf5e-d3d8-4500-98fb-037dd74124de)
+![DataFrame setelah digabungkan (movie & ratings)](https://github.com/user-attachments/assets/36131946-832f-4c6f-9302-109bc1cee14b)
 
 Gambar 3. DataFrame setelah digabungkan (movie & ratings)
 
@@ -109,23 +109,23 @@ Selanjutnya dilakukan pengecekan terhadap nilai yang hilang (missing value) dan 
 
 Pada tahap ini juga dilakukan **pemilihan fitur** yang akan digunakan dalam pembangunan sistem rekomendasi, yang disimpan dalam variabel bernama final, yaitu movieId, title, genres, userId, dan rating. Sebagai langkah validasi akhir terhadap kualitas data, dilakukan pengecekan kembali terhadap missing value dan duplikasi pada dataset gabungan. Hasil pengecekan menunjukkan konsistensi data, di mana tidak ditemukan nilai yang hilang maupun data duplikat. Dengan demikian, dataset dinyatakan layak dan siap digunakan untuk tahap pengembangan model rekomendasi. Dataset final ini terdiri dari 100.836 baris dan 5 kolom.
 
-![Dataframe setelah fitur final](https://github.com/user-attachments/assets/266e0f74-d5d2-4257-b6ec-ee94ae1223dc)
+![Dataframe setelah fitur final (yang digunakan membangun sistem rekomendasi)](https://github.com/user-attachments/assets/325e75d5-2e39-4cf0-81d5-200a33790bac)
 
 Gambar 4. Dataframe setelah fitur final (yang digunakan membangun sistem rekomendasi)
 
 Adapun langkah persiapan data untuk **sistem rekomendasi Content-Based Filtering** meliputi pembersihan data pada kolom genre film, yaitu mengganti nilai **(no genres listed)** menjadi string kosong dan Mengubah pemisah genre dari karakter | menjadi spasi sehingga formatnya lebih konsisten dan memudahkan pemrosesan data selanjutnya. Selanjutnya pembuatan matriks TF-IDF dari kolom genres pada dataset film. Matriks ini merepresentasikan setiap film dalam bentuk vektor berdasarkan genre-nya. Selanjutnya, dilakukan perhitungan cosine similarity antar film berdasarkan vektor TF-IDF tersebut untuk mengukur tingkat kemiripan konten antar film. Nilai similarity ini kemudian digunakan untuk merekomendasikan film yang memiliki genre serupa dengan film yang pernah disukai atau ditonton oleh pengguna.
 
-![Gambar hasil representasi vektor fitur genre film dengan TF-IDF](https://github.com/user-attachments/assets/ca56b62e-baea-405e-b6f2-876ea85530ab)
+![Gambar hasil representasi vektor fitur genre film dengan TF-IDF](https://github.com/user-attachments/assets/fd8e5a1c-bf20-41c4-b011-85caeed50034)
 
 Gambar 5. Gambar hasil representasi vektor fitur genre film dengan TF-IDF
 
-![Hasil Similarity matrix pada setiap film](https://github.com/user-attachments/assets/919cc48a-56ce-431e-bd30-5f4cc2afa2b6)
+![Hasil Similarity matrix pada setiap film](https://github.com/user-attachments/assets/13f8ea88-b9e7-445f-8456-785fce0cb666)
 
 Gambar 5. Hasil Similarity matrix pada setiap film
 
 Proses encoding terhadap userId dan movieId dilakukan untuk mengubahnya menjadi ID numerik berurutan, sehingga data tersebut dapat digunakan dalam layer embedding pada model sistem rekomendasi dengan pendekatan **Collaborative Filtering**. Selain itu, dilakukan **konversi tipe data kolom rating** menjadi float untuk memudahkan proses normalisasi nilai rating. Selanjutnya, **data diacak menggunakan .sample(frac=1)**, kemudian dilakukan **normalisasi nilai rating** sebelum pembagian data menjadi data latih dan data validasi dengan **perbandingan 80:20**. Pembagian ini bertujuan untuk keperluan pelatihan model. Berkut hasil pengacakan menggunakan .sample(frac=1).
 
-![Hasil pengacakan menggunakan .sample(frac=1)](https://github.com/user-attachments/assets/3b2fe6b0-efbd-40a4-84f4-6a5a31477720)
+![Hasil pengacakan menggunakan .sample(frac=1)](https://github.com/user-attachments/assets/43478c0d-080e-47f7-b803-2ae2b0ceb89d)
 
 Gambar 6. Hasil pengacakan menggunakan .sample(frac=1)
 
@@ -151,7 +151,7 @@ Kekurangan:
 
 `movie_recommendations('Mad Max (1979)')`
 
-![Hasil rekomendasi film berdasarkan pendekatan Content-Based Filtering](https://github.com/user-attachments/assets/9e7764e8-8480-4a42-85c4-357a078ed91b)
+![Hasil rekomendasi film berdasarkan pendekatan Content-Based Filtering](https://github.com/user-attachments/assets/7ad2d663-00c4-48bf-a934-746d3ceadf8c)
 
 Gambar 7. Hasil rekomendasi film berdasarkan pendekatan Content-Based Filtering
 
@@ -169,13 +169,26 @@ Kekurangan:
 - Butuh data interaksi yang cukup banyak agar model bisa belajar dengan baik.
 - Rentan terhadap data sparsity (data interaksi yang sangat jarang), sehingga kualitas rekomendasi bisa menurun.
 
-![Hasil rekomendasi film berdasarkan pendekatan Collaborative Filtering](https://github.com/user-attachments/assets/366e8565-1350-4f89-8ab6-37388400665e)
+![Hasil rekomendasi film berdasarkan pendekatan Collaborative Filtering](https://github.com/user-attachments/assets/38e29e42-6b06-496f-a9e8-41cb4921a8dd)
 
 Gambar 8. Hasil rekomendasi film berdasarkan pendekatan Collaborative Filtering
 
 ## Evaluation
 
-Model Collaborative Filtering dievaluasi menggunakan metrik Root Mean Squared Error (RMSE), yang mengukur seberapa jauh prediksi rating dari nilai rating sebenarnya. RMSE yang lebih rendah menunjukkan kualitas prediksi yang lebih baik.
+**Model Content-Based Filtering** dievaluasi menggunakan matriks Precision@k, yang mengukur seberapa banyak dari item yang direkomendasikan dalam top-k benar-benar relevan dengan preferensi pengguna. Dengan kata lain, Precision@k menunjukkan tingkat akurasi rekomendasi, yaitu proporsi item yang tepat dari semua rekomendasi yang diberikan.
+
+Hasil evaluasi Precision\@k untuk model Cosine Similarity menunjukkan performa rekomendasi yang sangat baik:
+
+* Precision\@1: 1.0
+* Precision\@3: 1.0
+* Precision\@5: 0.9333
+* Precision\@10: 0.9667
+
+Nilai Precision\@k yang tinggi di semua level k menandakan bahwa sebagian besar item yang direkomendasikan oleh model termasuk dalam daftar item relevan (ground truth). Precision\@1 dan Precision\@3 yang mencapai nilai sempurna (1.0) mengindikasikan bahwa rekomendasi teratas sangat akurat dan sesuai dengan preferensi pengguna. Penurunan kecil pada Precision\@5 dan Precision\@10 masih menunjukkan kualitas rekomendasi yang sangat baik dengan sedikit item yang kurang relevan.
+
+Secara keseluruhan, hasil ini mengindikasikan model Cosine Similarity mampu memberikan rekomendasi yang tepat dan relevan secara konsisten dalam berbagai jumlah rekomendasi teratas. Untuk peningkatan lebih lanjut, bisa dilakukan eksperimen dengan metode similarity lain, tuning parameter, atau menggabungkan fitur tambahan agar rekomendasi lebih personal dan kontekstual.
+
+**Model Collaborative Filtering** dievaluasi menggunakan metrik Root Mean Squared Error (RMSE), yang mengukur seberapa jauh prediksi rating dari nilai rating sebenarnya. RMSE yang lebih rendah menunjukkan kualitas prediksi yang lebih baik.
 
 Hasil pelatihan menunjukkan bahwa model mencapai performa yang cukup baik:
 
@@ -184,7 +197,7 @@ Hasil pelatihan menunjukkan bahwa model mencapai performa yang cukup baik:
 
 Meskipun terdapat sedikit perbedaan antara error pada data pelatihan dan data validasi, selisih tersebut masih dalam batas wajar dan tidak menunjukkan overfitting yang signifikan. Hal ini mengindikasikan bahwa model memiliki kemampuan generalisasi yang cukup baik terhadap data baru. Namun, untuk meningkatkan performa lebih lanjut dan mencegah potensi overfitting pada pelatihan jangka panjang, teknik tambahan seperti Dropout, regularisasi (L2), atau early stopping dapat diterapkan. Selain itu, peningkatan kualitas data dan penyempurnaan dimensi embedding juga dapat menjadi strategi pengembangan model selanjutnya.
 
-![Grafik Hasil Pelatihan ](https://github.com/user-attachments/assets/ad80dd9c-a726-4607-83f6-d433d12cf272)
+![Grafik Hasil Pelatihan ](https://github.com/user-attachments/assets/220af343-fc18-4f0b-be77-7b49a92e71dc)
 
 Gambar 9. Grafik Hasil Pelatihan 
 
